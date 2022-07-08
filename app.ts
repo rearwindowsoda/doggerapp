@@ -5,6 +5,7 @@ import {unlink} from 'fs/promises';
 import ImgurClient from 'imgur';
 import path from 'path';
 import { v4 } from 'uuid';
+import 'express-async-errors';
 import { CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN } from './config/config';
 import {handleError, ValidationError} from "./utils/errors";
 const app = express();
