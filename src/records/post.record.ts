@@ -2,6 +2,8 @@ import {NewPostEntity, PostEntity} from "../types/post/post-entity";
 import {ValidationError} from "../utils/errors";
 import {v4} from "uuid";
 import {Post} from "../entity/Post";
+import {GetListOfPostsResponse} from "../types/post/post-list";
+import {AppDataSource} from "../data-source";
 
 export class PostRecord implements PostEntity {
     public id: string;
@@ -31,4 +33,18 @@ export class PostRecord implements PostEntity {
     return this.id
     }
 
+    static async showPosts(currentPage): Promise<GetListOfPostsResponse>{
+        const postRepository = AppDataSource.getRepository(Post)
+        const maxOnPage = 5;
+        const [posts, count] = await postRepository.findAndCount({
+            skip: maxOnPage * (currentPage - 1),
+            take: maxOnPage,
+            order: {createdAt: 'DESC'}
+        })
+        const pagesCount = Math.ceil(count / maxOnPage )
+
+        return {
+        posts, pagesCount
+        }
+    }
 }

@@ -5,6 +5,7 @@ import 'reflect-metadata';
 import {handleError} from "./utils/errors";
 import {newPostRouter} from "./routers/newpost";
 import {AppDataSource} from "./data-source";
+import {showpostsRouter} from "./routers/showposts";
 
 /*Initialize DB Connection*/
 AppDataSource.initialize().then(async () => {
@@ -24,6 +25,7 @@ AppDataSource.initialize().then(async () => {
 
     /*Express Router*/
     app.use('/upload', newPostRouter);
+    app.use('/show', showpostsRouter)
 
 
     /*Handling errors*/
