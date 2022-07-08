@@ -6,6 +6,7 @@ import ImgurClient from 'imgur';
 import path from 'path';
 import { v4 } from 'uuid';
 import { CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN } from './config/config';
+import {handleError, ValidationError} from "./utils/errors";
 const app = express();
 
 app.use(fileUpload({
@@ -53,16 +54,16 @@ app.post('/upload', async(req: Request, res: Response) => {
             type: 'stream',
         });
         console.log(imgUrResponse);
-
-    }catch(e){
-        throw new Error('Something went wrong, sorry');
-    }finally{
-        /* Deleting from server */
         await unlink(uploadPath);
-
+    }catch(e){
+        throw new ValidationError('Something went wrong, sorry');
     }
 
 });
+
+/*Handling errors*/
+app.use(handleError);
+
 
 /* Starting application */
 app.listen('3000', () => {
