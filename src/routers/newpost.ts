@@ -1,24 +1,25 @@
 import {Request, Response, Router} from 'express';
 import {UploadedFile} from "express-fileupload";
-import path from "path";
+import * as path from "path";
 import {v4} from "uuid";
 import {unlink} from "fs/promises";
 import {ValidationError} from "../utils/errors";
 import {imgurClient} from "../utils/imgurClient";
+import {PostRecord} from "../records/post.record";
 
 export const newPostRouter = Router();
 
 newPostRouter
-.post('/post', async(req: Request, res: Response) => {
-    /*Validating files request*/
-     if (!req.files || Object.keys(req.files).length === 0) {
+    .post('/post', async (req: Request, res: Response) => {
+        /*Validating files request*/
+        if (!req.files || Object.keys(req.files).length === 0) {
             throw new ValidationError('No files were uploaded')
         }
         const uploadedImage: UploadedFile = req.files.file as UploadedFile;
-    /*Validating user's file*/
-if(uploadedImage.mimetype !== 'image/jpeg' && uploadedImage.mimetype !=='image/png'){
-    throw new ValidationError('You can only upload JPG and PNG files ')
-}
+        /*Validating user's file*/
+        if (uploadedImage.mimetype !== 'image/jpeg' && uploadedImage.mimetype !== 'image/png') {
+            throw new ValidationError('You can only upload JPG and PNG files ')
+        }
         const extensionFinder = uploadedImage.name.split('.');
         console.log(__dirname);
 
@@ -26,16 +27,29 @@ if(uploadedImage.mimetype !== 'image/jpeg' && uploadedImage.mimetype !=='image/p
         console.log(uploadPath);
 
         /* Safely temporarily saving on a server */
-        uploadedImage.mv(uploadPath, function(err) {
-            if (err){
+        uploadedImage.mv(uploadPath, function (err) {
+            if (err) {
                 throw new ValidationError('Something went wrong, sorry.');
             }
         });
 
-    /* Uploading to Imgur */
-    //TODO: Delete this console.log
-    console.log(await imgurClient(uploadPath));
+        /* Uploading to Imgur */
+         const imgurResponse = await imgurClient(uploadPath);
 
-    /*Safely removing picture from local server*/
-    await unlink(uploadPath);
+        /*Safely removing picture from local server*/
+        await unlink(uploadPath);
+
+        /* Save image link do database */
+        try{
+            const newPost = new PostRecord({
+            link: imgurResponse.data.link,
+            })
+           await newPost.insert();
+            res.json(newPost.id)
+        }catch(e){
+            console.error(e);
+            throw new Error('Something went wrong')
+        }
+
+
     });
