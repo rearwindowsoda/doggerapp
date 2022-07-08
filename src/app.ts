@@ -6,6 +6,7 @@ import {handleError} from "./utils/errors";
 import {newPostRouter} from "./routers/newpost";
 import {AppDataSource} from "./data-source";
 import {showpostsRouter} from "./routers/showposts";
+import {userRouter} from "./routers/user";
 
 /*Initialize DB Connection*/
 AppDataSource.initialize().then(async () => {
@@ -25,7 +26,8 @@ AppDataSource.initialize().then(async () => {
 
     /*Express Router*/
     app.use('/upload', newPostRouter);
-    app.use('/show', showpostsRouter)
+    app.use('/show', showpostsRouter);
+    app.use('/user', userRouter)
 
 
     /*Handling errors*/
