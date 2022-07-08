@@ -1,12 +1,14 @@
 import express, { json} from 'express';
 import fileUpload from 'express-fileupload';
 import 'express-async-errors';
+import 'reflect-metadata';
 import {handleError} from "./utils/errors";
 import {newPostRouter} from "./routers/newpost";
 const app = express();
 
 app.use(fileUpload({
     limits:{fileSize: 5 * 1024 * 1024},
+    abortOnLimit: true,
     useTempFiles : true,
     tempFileDir : 'uploads/tmp/',
     preserveExtension: 4,
