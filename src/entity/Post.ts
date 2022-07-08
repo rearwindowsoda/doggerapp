@@ -1,12 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import {Entity, PrimaryGeneratedColumn, Column, BaseEntity} from "typeorm"
 
 @Entity()
-export class Post {
-
+export class Post extends BaseEntity{
     @PrimaryGeneratedColumn('uuid')
-    id: number
+    id: string
 
-    @Column()
+    @Column({
+        length: 200,
+    })
     link: string
 
     @Column()
