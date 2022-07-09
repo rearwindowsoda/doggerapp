@@ -1,5 +1,5 @@
 import ImgurClient from "imgur";
-import {CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN} from "../config/config";
+import {CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN} from "../config/db/config";
 import {createReadStream} from "fs";
 import {ValidationError} from "./errors";
 //@TODO Fix this type

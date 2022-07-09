@@ -4,3 +4,7 @@ node_modules/
 build/
 tmp/
 temp/
+src/config/db/config.ts
+src/config/db/db.ts
+src/jwt/token-secret.ts
+src/data-source.ts

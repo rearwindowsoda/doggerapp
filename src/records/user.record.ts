@@ -1,9 +1,11 @@
-import {NewUserEntity, UserEntity} from "../types/user/user";
+import {LoggedUserResponse, LoggedUserSuccessfulresponse, NewUserEntity, UserEntity} from "../types/user/user";
 import {ValidationError} from "../utils/errors";
 import {v4} from "uuid";
 import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken'
 import {AppDataSource} from "../data-source";
 import {User} from "../entity/User";
+import {ACCESS_TOKEN_SECRET} from "../config/jwt/token-secret";
 
 export class UserRecord implements UserEntity {
     public email: string;
@@ -57,4 +59,21 @@ export class UserRecord implements UserEntity {
 
         return this.id;
     }
+
+//@TODO Finish JWT implementation
+    static async loginUser(login, password): Promise<LoggedUserResponse | LoggedUserSuccessfulresponse>{
+        const userRepository = await AppDataSource.getRepository(User);
+        const user = await userRepository.find({where: {login}});
+        if(user.length === 0){
+            throw new ValidationError('This user does not exist in our database.')
+        }
+        console.log(user[0])
+            if(await bcrypt.compare(password, user[0].password)){
+              const accessToken = jwt.sign(JSON.parse(JSON.stringify(user[0])), ACCESS_TOKEN_SECRET )
+                return {isAuth: true, accessToken}
+            }
+
+        return {isAuth: false}
+        }
+
 }

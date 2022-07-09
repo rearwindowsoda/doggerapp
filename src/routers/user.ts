@@ -5,8 +5,13 @@ import {UserRecord} from "../records/user.record";
 export const userRouter = Router();
 
 userRouter
-    .get('/login', async (req, res) => {
-        res.send('ok')
+    .post('/login', async (req, res) => {
+        const {login, password} = req.body;
+        if(!login || !password){
+            res.status(500).send('Something went wrong. Try again later.')
+        }
+        const loggedUser = await UserRecord.loginUser(login, password)
+       res.json(loggedUser)
     })
     .post('/register', async (req, res) => {
         const {login, password, email} = req.body;
