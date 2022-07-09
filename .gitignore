@@ -6,5 +6,5 @@ tmp/
 temp/
 src/config/db/config.ts
 src/config/db/db.ts
-src/config/jwt/token-secret.ts
+src/config/jwt/token.secret.ts
 src/data-source.ts

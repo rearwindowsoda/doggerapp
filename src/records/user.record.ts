@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken'
 import {AppDataSource} from "../data-source";
 import {User} from "../entity/User";
-import {ACCESS_TOKEN_SECRET} from "../config/jwt/token-secret";
+import {ACCESS_TOKEN_SECRET} from "../config/jwt/token.secret";
 
 export class UserRecord implements UserEntity {
     public email: string;
