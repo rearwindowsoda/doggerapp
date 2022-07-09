@@ -10,6 +10,11 @@ export class Post extends BaseEntity{
     })
     link: string
 
+    @Column({
+        length: 200,
+    })
+    description: string
+
     @Column()
     likes: number
 

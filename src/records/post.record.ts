@@ -8,6 +8,7 @@ import {AppDataSource} from "../data-source";
 export class PostRecord implements PostEntity {
     public id: string;
     public createdAt: Date;
+    public description: string;
     public likes: number;
     public link: string;
 
@@ -20,6 +21,7 @@ export class PostRecord implements PostEntity {
      this.createdAt = new Date();
      this.likes = 0;
      this.link = obj.link;
+     this.description = obj.description;
     }
 
     async insert(): Promise<string>{
@@ -28,6 +30,7 @@ export class PostRecord implements PostEntity {
         newPostSave.link = this.link
         newPostSave.createdAt = this.createdAt;
         newPostSave.likes = this.likes;
+        newPostSave.description = this.description;
         await newPostSave.save();
 
     return this.id

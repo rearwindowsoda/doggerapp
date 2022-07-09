@@ -6,11 +6,21 @@ import {unlink} from "fs/promises";
 import {ValidationError} from "../utils/errors";
 import {imgurClient} from "../utils/imgurClient";
 import {PostRecord} from "../records/post.record";
+import {authenticateToken} from "../middlewares/authenticate-token";
 
 export const newPostRouter = Router();
 
 newPostRouter
-    .post('/post', async (req: Request, res: Response) => {
+    .post('/post', authenticateToken, async (req: Request, res: Response) => {
+        const description = req.body.description.trim();
+        /*Validating description*/
+        if(!description || description.length > 200 || description.length < 20){
+            throw new ValidationError('Your post must contain a short description with minimal number of 20 characters but not longer than 200 characters.')
+        }
+        if(typeof description !== 'string'){
+            throw new ValidationError('Please type in the description in correct (plain text) format.')
+        }
+
         /*Validating files request*/
         if (!req.files || Object.keys(req.files).length === 0) {
             throw new ValidationError('No files were uploaded')
@@ -40,12 +50,14 @@ newPostRouter
         await unlink(uploadPath);
 
         /* Save image link do database */
+        console.log(description)
         try{
             const newPost = new PostRecord({
+                description: description,
             link: imgurResponse.data.link,
             })
            await newPost.insert();
-            res.json(newPost.id)
+            res.status(201).send(newPost.id)
         }catch(e){
             console.error(e);
             throw new Error('Something went wrong')
