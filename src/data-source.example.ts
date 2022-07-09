@@ -4,11 +4,11 @@ import {Post} from "./entity/Post";
 
 export const AppDataSource = new DataSource({
     type: "mysql",
-    host: "localhost",
-    port: 3306,
+    host: "123",
+    port: 123,
     username: "root",
-    password: "",
-    database: "doggerapp",
+    password: "123",
+    database: "123",
     synchronize: true,
     logging: true,
     entities: [Post],

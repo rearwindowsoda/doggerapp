@@ -1,7 +1,7 @@
 export const dbSettings = {
-    host: "localhost",
-    port: 3306,
-    username: "root",
-    password: "",
-    database: "doggerapp",
+    host: "123",
+    port: 123,
+    username: "123",
+    password: "123",
+    database: "123",
 }
