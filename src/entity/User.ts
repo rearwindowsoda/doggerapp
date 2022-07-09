@@ -22,5 +22,4 @@ export class User extends BaseEntity{
 
     @Column('datetime')
     registeredAt: Date
-
 }

@@ -11,6 +11,7 @@ export type NewUserEntity = Omit<UserEntity, "id" | "registeredAt">
 export type LoggedUserResponse = {
     isAuth: boolean;
 }
-export interface LoggedUserSuccessfulresponse extends LoggedUserResponse {
+export interface LoggedUserSuccessfulResponse extends LoggedUserResponse {
     accessToken: string;
+    refreshToken: string;
 }
