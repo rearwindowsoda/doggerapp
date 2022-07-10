@@ -4,9 +4,10 @@ login: string;
 email: string;
 password: string;
 registeredAt: Date;
+likes: string | null;
 }
 
-export type NewUserEntity = Omit<UserEntity, "id" | "registeredAt">
+export type NewUserEntity = Omit<UserEntity, "id" | "registeredAt" | "likes">
 
 export type LoggedUserResponse = {
     isAuth: boolean;

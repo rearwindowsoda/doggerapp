@@ -2,7 +2,6 @@
 export interface PostEntity {
     id: string;
     link: string;
-    likes: number;
     description: string;
     createdAt: Date;
 }

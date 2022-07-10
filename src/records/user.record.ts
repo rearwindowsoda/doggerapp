@@ -13,6 +13,7 @@ export class UserRecord implements UserEntity {
     public login: string;
     public password: string;
     public registeredAt: Date;
+    public likes: null | string;
 
     constructor(obj: NewUserEntity) {
         if (!obj.login || !obj.password || !obj.email || typeof obj.login !== 'string' || typeof obj.password !== 'string' || typeof obj.email !== 'string') {
@@ -30,6 +31,7 @@ export class UserRecord implements UserEntity {
         this.login = obj.login;
         this.password = obj.password;
         this.registeredAt = new Date();
+        this.likes = null;
 
     }
 
@@ -55,12 +57,12 @@ export class UserRecord implements UserEntity {
         user.login = this.login;
         user.id = v4();
         user.registeredAt = new Date();
+        user.likes = null;
         await user.save();
 
         return this.id;
     }
 
-//@TODO Finish JWT implementation
     static async loginUser(login, password): Promise<LoggedUserResponse | LoggedUserSuccessfulResponse> {
         const userRepository = await AppDataSource.getRepository(User);
         const dbResponseWithUser = await userRepository.findOne({where: {login}});

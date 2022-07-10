@@ -9,17 +9,15 @@ export class PostRecord implements PostEntity {
     public id: string;
     public createdAt: Date;
     public description: string;
-    public likes: number;
     public link: string;
 
     constructor(obj: NewPostEntity) {
         if (!obj.link || typeof obj.link !== 'string' || obj.link.length > 200) {
-            throw new ValidationError('Wystąpił błąd z zapisem zdjęcia do naszej bazy danych')
+            throw new ValidationError('Saving picture to db could not be done')
         }
 
         this.id = v4();
         this.createdAt = new Date();
-        this.likes = 0;
         this.link = obj.link;
         this.description = obj.description;
     }
@@ -29,7 +27,6 @@ export class PostRecord implements PostEntity {
         newPostSave.id = this.id
         newPostSave.link = this.link
         newPostSave.createdAt = this.createdAt;
-        newPostSave.likes = this.likes;
         newPostSave.description = this.description;
         await newPostSave.save();
 
@@ -51,13 +48,11 @@ export class PostRecord implements PostEntity {
         }
     }
 
-    static async topPosts(): Promise<TopTenPostsResponse> {
-        const postRepository = AppDataSource.getRepository(Post);
-
-        return await postRepository.createQueryBuilder("post")
-            .orderBy("post.likes", "DESC")
-            .limit(10)
-            .getMany()
-
+    /*This might not be the best idea ever ;D */
+    static async getTopTen(): Promise<TopTenPostsResponse> {
+        const postRepository = AppDataSource.getRepository(Post)
+        const query = await postRepository.query('SELECT `post`.`id`, `post`.`link`, `post`.`createdAt`, `post`.`description`, COUNT(`user`.`likesId`) "likes" FROM `user` INNER JOIN post ON `user`.`likesId` = `post`.`id` GROUP BY `user`.`likesId` ORDER BY COUNT(`user`.`likesId`) DESC LIMIT 10')
+return await Promise.all(query.map(el => new PostRecord(el) ))
     }
+
 }
