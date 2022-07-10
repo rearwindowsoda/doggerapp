@@ -27,7 +27,7 @@ likePostRouter
             }
         } catch (e) {
             console.error(e)
-        res.status(403).send({message: 'You have to be logged in to like posts.'})
+        res.status(403).send({message: 'Something went wrong. Try again later.'})
         }
     })
 
