@@ -1,4 +1,5 @@
-import {Entity, PrimaryGeneratedColumn, Column, BaseEntity} from "typeorm"
+import {BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm"
+import {User} from "./User";
 
 @Entity()
 export class Post extends BaseEntity{
@@ -15,10 +16,9 @@ export class Post extends BaseEntity{
     })
     description: string
 
-    @Column()
-    likes: number
-
     @Column('datetime')
     createdAt: Date
 
+@OneToMany(() => User, (user) => user.id, {cascade: true})
+    users: User[];
 }
