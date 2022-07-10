@@ -57,7 +57,7 @@ newPostRouter
             link: imgurResponse.data.link,
             })
            await newPost.insert();
-            res.status(201).send(newPost.id)
+            res.status(201).send({message: newPost.id})
         }catch(e){
             console.error(e);
             throw new Error('Something went wrong')

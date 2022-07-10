@@ -8,6 +8,7 @@ import {newPostRouter} from "./routers/newPost";
 import {AppDataSource} from "./data-source";
 import {showpostsRouter} from "./routers/showPosts";
 import {userRouter} from "./routers/user";
+import {likePostRouter} from "./routers/likePost";
 
 /*Initialize DB Connection*/
 AppDataSource.initialize().then(async () => {
@@ -30,7 +31,8 @@ AppDataSource.initialize().then(async () => {
     /*Express Router*/
     app.use('/upload', newPostRouter);
     app.use('/show', showpostsRouter);
-    app.use('/user', userRouter)
+    app.use('/user', userRouter);
+    app.use('/post', likePostRouter);
 
 
     /* Starting application */

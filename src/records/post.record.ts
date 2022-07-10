@@ -4,6 +4,7 @@ import {v4} from "uuid";
 import {Post} from "../entity/Post";
 import {GetListOfPostsResponse, TopTenPostsResponse} from "../types/post/post-list";
 import {AppDataSource} from "../data-source";
+import {User} from "../entity/User";
 
 export class PostRecord implements PostEntity {
     public id: string;
@@ -54,5 +55,12 @@ export class PostRecord implements PostEntity {
         const query = await postRepository.query('SELECT `post`.`id`, `post`.`link`, `post`.`createdAt`, `post`.`description`, COUNT(`user`.`likesId`) "likes" FROM `user` INNER JOIN post ON `user`.`likesId` = `post`.`id` GROUP BY `user`.`likesId` ORDER BY COUNT(`user`.`likesId`) DESC LIMIT 10')
 return await Promise.all(query.map(el => new PostRecord(el) ))
     }
+
+ static async likePost(id: string, login: string):Promise<string>{
+
+        const postRepository = AppDataSource.getRepository(User)
+         await postRepository.query('UPDATE `user` SET `user`.`likesId` = ? WHERE `user`.`login` = ?', [id, login])
+        return id
+ }
 
 }

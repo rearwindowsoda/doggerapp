@@ -1,13 +1,14 @@
 import {JwtPayload, verify} from 'jsonwebtoken';
 import {ACCESS_TOKEN_SECRET} from "../config/jwt/token.secret";
 import {NextFunction, Request, Response} from "express";
+import {PayloadVerification} from "../types/jwt/jwt";
 
 
 interface RequestWithVerifiedUser extends Request {
     user: string | JwtPayload;
 }
 
-type PayloadVerification = JwtPayload | string;
+
 
 export function authenticateToken(req: RequestWithVerifiedUser, res: Response, next: NextFunction) {
     console.log(req.cookies)
