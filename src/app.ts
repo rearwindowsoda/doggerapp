@@ -11,6 +11,7 @@ import {showpostsRouter} from "./routers/showPosts";
 import {userRouter} from "./routers/user";
 import {likePostRouter} from "./routers/likePost";
 import {corsConfig} from "./config/cors/cors";
+import rateLimit from "express-rate-limit";
 
 /*Initialize DB Connection*/
 AppDataSource.initialize().then(async () => {
@@ -23,6 +24,12 @@ AppDataSource.initialize().then(async () => {
 
 
     /*Middlewares*/
+    app.use(express.json());
+    app.use(rateLimit({
+        windowMs: 15 * 60 * 1000, // 15 minutes
+        max: 100,
+    }))
+    app.use(cookieParser());
     app.use(fileUpload({
         limits: {fileSize: 5 * 1024 * 1024},
         abortOnLimit: true,
@@ -32,8 +39,8 @@ AppDataSource.initialize().then(async () => {
 
     }));
 
-    app.use(express.json());
-    app.use(cookieParser())
+
+
 
 
 
