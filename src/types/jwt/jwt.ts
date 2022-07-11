@@ -4,4 +4,8 @@ export interface RefreshTokenVerifiedResponse extends JwtPayload {
     login: string;
 }
 
-export type PayloadVerification = JwtPayload | string;
+
+export interface PayloadVerification {
+    JwtPayload,
+    login: string
+}

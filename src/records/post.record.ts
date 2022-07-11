@@ -5,6 +5,7 @@ import {Post} from "../entity/Post";
 import {GetListOfPostsResponse, TopTenPostsResponse} from "../types/post/post-list";
 import {AppDataSource} from "../data-source";
 import {User} from "../entity/User";
+import {PostLikeResponse} from "../types/post/post-like";
 
 export class PostRecord implements PostEntity {
     public id: string;
@@ -56,11 +57,16 @@ export class PostRecord implements PostEntity {
 return await Promise.all(query.map(el => new PostRecord(el) ))
     }
 
- static async likePost(id: string, login: string):Promise<string>{
+ static async likePost(id: string, login: string):Promise<PostLikeResponse>{
+        const postRepository = AppDataSource.getRepository(Post)
+     const foundPost = postRepository.find({where: {id}})
+     if(!foundPost){
+         return {message: 'Post not found'}
+     }
+        const userRepository = AppDataSource.getRepository(User)
+       await userRepository.query('UPDATE `user` SET `user`.`likesId` = ? WHERE `user`.`login` = ?', [id, login])
 
-        const postRepository = AppDataSource.getRepository(User)
-         await postRepository.query('UPDATE `user` SET `user`.`likesId` = ? WHERE `user`.`login` = ?', [id, login])
-        return id
+        return {message: id}
  }
 
 }
