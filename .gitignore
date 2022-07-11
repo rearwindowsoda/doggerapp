@@ -8,3 +8,4 @@ src/config/db/config.ts
 src/config/db/db.ts
 src/config/jwt/token.secret.ts
 src/data-source.ts
+/src/config/cors/cors.ts
