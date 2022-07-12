@@ -38,7 +38,7 @@ userRouter
         const newUser = new UserRecord({login, password, email})
         await newUser.registerNewUser();
 
-        res.status(201).send('User created.')
+        res.status(201).send({message: `User ${login}  created.`})
     })
 
     .post('/token', authenticateToken, async (req: Request, res: Response) => {
