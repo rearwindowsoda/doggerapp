@@ -20,6 +20,7 @@ AppDataSource.initialize().then(async () => {
     /*Cors*/
     app.use(cors({
         origin: corsConfig,
+        credentials: true,
     }))
 
 

@@ -15,7 +15,7 @@ userRouter
         const {login, password} = req.body;
 
         if (!login || !password) {
-            res.status(500).send('Something went wrong. Try again later.')
+            res.status(500).send({message: 'Something went wrong. Try again later.'})
         }
         const loginResponseFromDb = await UserRecord.loginUser(login, password);
         if (loginResponseFromDb.isAuth === true) {
@@ -23,7 +23,8 @@ userRouter
             const verifiedUserAccessToken = (loginResponseFromDb as LoggedUserSuccessfulResponse).refreshToken;
             res.cookie('access-token', verifiedUserToken, {
                 httpOnly: true,
-                maxAge: 24 * 60 * 60 * 1000
+                maxAge: 24 * 60 * 60 * 1000,
+                sameSite: "none"
             }).cookie('refresh-token', verifiedUserAccessToken, {
                 httpOnly: true,
                 maxAge: 7 * 24 * 60 * 60 * 1000
@@ -54,7 +55,8 @@ userRouter
            const newAccessToken =  generateAccessToken({login: (payload as RefreshTokenVerifiedResponse).login});
             res.cookie('access-token', newAccessToken, {
                 httpOnly: true,
-                maxAge: 24 * 60 * 60 * 1000
+                maxAge: 24 * 60 * 60 * 1000,
+                sameSite: 'none',
             });
             res.send(
                 {message: 'New access token granted'}

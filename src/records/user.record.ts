@@ -67,16 +67,17 @@ export class UserRecord implements UserEntity {
         const userRepository = await AppDataSource.getRepository(User);
         const dbResponseWithUser = await userRepository.findOne({where: {login}});
         if (!dbResponseWithUser) {
-            throw new ValidationError('This user does not exist in our database.')
+            throw new ValidationError('Login or password are not valid. Try again.')
         }
         if (await bcrypt.compare(password, dbResponseWithUser.password)) {
             const user = {login: dbResponseWithUser.login};
             const accessToken = generateAccessToken(user);
             const refreshToken = generateRefreshToken(user)
             return {isAuth: true, accessToken, refreshToken}
+        }else {
+            throw new ValidationError('Login or password are not valid. Try Again')
         }
 
-        return {isAuth: false}
     }
 
 }
