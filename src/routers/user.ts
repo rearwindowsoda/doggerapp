@@ -1,6 +1,6 @@
 import {Request, Response, Router} from "express";
 import {UserRecord} from "../records/user.record";
-import {LoggedUserSuccessfulResponse} from "../types/user/user";
+import {LoggedUserSuccessfulResponse} from "../types";
 import {authenticateToken} from "../middlewares/authenticate-token";
 import {JwtPayload, verify} from "jsonwebtoken";
 import {REFRESH_TOKEN_SECRET} from "../config/jwt/token.secret";
@@ -69,7 +69,7 @@ userRouter
 
     })
 
-.post('/logout', async (req: Request, res: Response) => {
+.delete('/logout', async (req: Request, res: Response) => {
     try{
         res.clearCookie('access-token').clearCookie('refresh-token').send({message: 'User successfully logged out'})
     }catch (e) {
