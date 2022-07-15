@@ -14,5 +14,4 @@ export type LoggedUserResponse = {
 }
 export interface LoggedUserSuccessfulResponse extends LoggedUserResponse {
     accessToken: string;
-    refreshToken: string;
 }

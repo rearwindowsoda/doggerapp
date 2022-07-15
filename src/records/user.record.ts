@@ -1,10 +1,10 @@
-import {LoggedUserResponse, LoggedUserSuccessfulResponse, NewUserEntity, UserEntity} from "../types/user/user";
+import {LoggedUserResponse, LoggedUserSuccessfulResponse, NewUserEntity, UserEntity} from "../types";
 import {ValidationError} from "../utils/errors";
 import {v4} from "uuid";
 import * as bcrypt from 'bcrypt';
 import {AppDataSource} from "../data-source";
 import {User} from "../entity/User";
-import {generateAccessToken, generateRefreshToken} from "../utils/generateTokens";
+import {generateAccessToken} from "../utils/generateTokens";
 
 
 export class UserRecord implements UserEntity {
@@ -72,9 +72,8 @@ export class UserRecord implements UserEntity {
         if (await bcrypt.compare(password, dbResponseWithUser.password)) {
             const user = {login: dbResponseWithUser.login};
             const accessToken = generateAccessToken(user);
-            const refreshToken = generateRefreshToken(user)
-            return {isAuth: true, accessToken, refreshToken}
-        }else {
+            return {isAuth: true, accessToken}
+        } else {
             throw new ValidationError('Login or password are not valid. Try Again')
         }
 

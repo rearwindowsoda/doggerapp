@@ -5,7 +5,6 @@ import {NextFunction, Request, Response} from "express";
 
 
 export function authenticateToken(req: Request, res: Response, next: NextFunction) {
-    console.log(req.cookies)
     try {
         const accessToken = req.cookies['access-token'];
         const payload = verify(accessToken, ACCESS_TOKEN_SECRET);

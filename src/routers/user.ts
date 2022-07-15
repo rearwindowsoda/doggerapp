@@ -1,11 +1,6 @@
 import {Request, Response, Router} from "express";
 import {UserRecord} from "../records/user.record";
 import {LoggedUserSuccessfulResponse} from "../types";
-import {authenticateToken} from "../middlewares/authenticate-token";
-import {JwtPayload, verify} from "jsonwebtoken";
-import {REFRESH_TOKEN_SECRET} from "../config/jwt/token.secret";
-import {generateAccessToken} from "../utils/generateTokens";
-import {RefreshTokenVerifiedResponse} from "../types/jwt/jwt";
 
 
 export const userRouter = Router();
@@ -20,12 +15,7 @@ userRouter
         const loginResponseFromDb = await UserRecord.loginUser(login, password);
         if (loginResponseFromDb.isAuth === true) {
             const verifiedUserToken = (loginResponseFromDb as LoggedUserSuccessfulResponse).accessToken;
-            const verifiedUserAccessToken = (loginResponseFromDb as LoggedUserSuccessfulResponse).refreshToken;
             res.cookie('access-token', verifiedUserToken, {
-                httpOnly: true,
-                maxAge: 24 * 60 * 60 * 1000,
-                sameSite: "none"
-            }).cookie('refresh-token', verifiedUserAccessToken, {
                 httpOnly: true,
                 maxAge: 7 * 24 * 60 * 60 * 1000
             }).send(loginResponseFromDb)
@@ -42,37 +32,11 @@ userRouter
         res.status(201).send({message: `User ${login}  created.`})
     })
 
-    .post('/token', authenticateToken, async (req: Request, res: Response) => {
 
+    .delete('/logout', async (req: Request, res: Response) => {
         try {
-            const refreshToken = req.cookies['refresh-token'];
-            const payload: JwtPayload | string = verify(refreshToken, REFRESH_TOKEN_SECRET);
-            if (!payload) {
-                return res.status(401).send({
-                    message: 'Unauthenticated token'
-                });
-            }
-           const newAccessToken =  generateAccessToken({login: (payload as RefreshTokenVerifiedResponse).login});
-            res.cookie('access-token', newAccessToken, {
-                httpOnly: true,
-                maxAge: 24 * 60 * 60 * 1000,
-                sameSite: 'none',
-            });
-            res.send(
-                {message: 'New access token granted'}
-            )
+            res.clearCookie('refresh-token').send({message: 'User successfully logged out'})
         } catch (e) {
-            return res.status(401).send({
-                message: 'Unauthenticated token'
-            })
+            res.status(500).send({message: 'Something went wrong, try again'})
         }
-
     })
-
-.delete('/logout', async (req: Request, res: Response) => {
-    try{
-        res.clearCookie('access-token').clearCookie('refresh-token').send({message: 'User successfully logged out'})
-    }catch (e) {
-        res.status(500).send({message: 'Something went wrong, try again'})
-    }
-})
