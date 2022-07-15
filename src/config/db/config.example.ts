@@ -1,0 +1,5 @@
+const CLIENT_ID = '123';
+const CLIENT_SECRET = '123';
+const REFRESH_TOKEN = '123';
+
+export {CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN};
